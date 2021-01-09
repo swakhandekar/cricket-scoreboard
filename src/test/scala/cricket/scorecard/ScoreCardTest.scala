@@ -14,6 +14,18 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
 
         updatedScoreCard.totalScore shouldBe 1
       }
+
+      "should return score-card with addition in bowled balls in an over" in {
+        val scoreCard = ScoreCard(12)
+
+        val updatedScoreCard = scoreCard.nextBall(Runs(4))
+
+        val over = updatedScoreCard.over
+        over.number shouldBe 1
+        val ballsInOver = over.balls
+        ballsInOver.size shouldBe 1
+        ballsInOver.head shouldBe Runs(4)
+      }
     }
 
     "stat is a wide ball" should {
