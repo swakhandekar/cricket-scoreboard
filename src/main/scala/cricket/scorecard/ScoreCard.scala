@@ -1,7 +1,7 @@
 package cricket.scorecard
 
-import cricket.scorecard.models.Score
+import cricket.scorecard.models.Ball
 
 case class ScoreCard(totalScore: Int) {
-  def nextBall(score: Score): ScoreCard = copy(totalScore + 1)
+  def nextBall(score: Ball): ScoreCard = copy(totalScore + score.runs)
 }
