@@ -69,4 +69,14 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
       ballsInOver.size shouldBe 0
     }
   }
+
+  "wickets" should {
+    "return number of wickets" in {
+      val scoreCard = ScoreCard(0)
+
+      val updatedCard = scoreCard.nextBall(Runs(1)).nextBall(Wicket).nextBall(Runs(2)).nextBall(Wicket)
+
+      updatedCard.wickets shouldBe 2
+    }
+  }
 }
