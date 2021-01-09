@@ -44,6 +44,16 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
 
         updatedScoreCard.totalScore shouldBe 12
       }
+
+      "return score card with next player on strike" in {
+        val scoreCard = ScoreCard(13, 2, List(Player("C"), Player("D")), Player("A"), Player("B"), Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
+
+        val updatedScoreCard = scoreCard.nextBall(Wicket)
+
+        updatedScoreCard.players.length shouldBe 1
+        updatedScoreCard.players.head.name shouldBe "D"
+        updatedScoreCard.onStrike.name shouldBe "C"
+      }
     }
 
     "should return score-card with addition in bowled balls in an over" in {

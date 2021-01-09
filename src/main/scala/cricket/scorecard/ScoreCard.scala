@@ -12,13 +12,23 @@ case class ScoreCard(
     val updatedOver = over.copy(balls = score :: over.balls)
     val shouldRotate = shouldRotateStrike(score, updatedOver)
 
+    val (updatedOnStrike, updatedOffStrike) = updatedOnFieldPlayers(score, shouldRotate)
+
     copy(
       totalScore = totalScore + score.runs,
       over = if(updatedOver.isFinished) Over.empty(over.number + 1) else updatedOver,
       wickets = if(score == Wicket) wickets + 1 else wickets,
-      onStrike = if(shouldRotate) offStrike else onStrike,
-      offStrike = if(shouldRotate) onStrike else offStrike
+      onStrike = updatedOnStrike,
+      offStrike = updatedOffStrike,
+      players = if(score == Wicket && players.nonEmpty) players.tail else players
     )
+  }
+
+  private def updatedOnFieldPlayers(score: Ball, shouldRotate: Boolean) = {
+    if (score == Wicket && players.nonEmpty) (players.head, offStrike)
+    else if (shouldRotate) (offStrike, onStrike)
+    else (onStrike, offStrike)
+
   }
 
   private def shouldRotateStrike(score: Ball, over: Over): Boolean = score match {
