@@ -17,12 +17,12 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
     }
 
     "is a wide ball" should {
-      "return score card with score updated by one" in {
+      "return score card with score updated additionally by one" in {
         val scoreCard = ScoreCard(2)
 
-        val updatedScoreCard = scoreCard.nextBall(WideBall)
+        val updatedScoreCard = scoreCard.nextBall(WideBall(4))
 
-        updatedScoreCard.totalScore shouldBe 3
+        updatedScoreCard.totalScore shouldBe 7
       }
     }
 
@@ -30,9 +30,9 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
       "return score card with score updated by one" in {
         val scoreCard = ScoreCard(12)
 
-        val updatedScoreCard = scoreCard.nextBall(NoBall)
+        val updatedScoreCard = scoreCard.nextBall(NoBall(6))
 
-        updatedScoreCard.totalScore shouldBe 13
+        updatedScoreCard.totalScore shouldBe 19
       }
     }
 

@@ -6,12 +6,12 @@ sealed trait Ball {
 
 case class Runs(runs: Int) extends Ball
 
-case object WideBall extends Ball {
-  override def runs: Int = 1
+case class WideBall(r: Int = 0) extends Ball {
+  override def runs: Int = r + 1
 }
 
-case object NoBall extends Ball {
-  override def runs: Int = 1
+case class NoBall(r: Int = 0) extends Ball {
+  override def runs: Int = r + 1
 }
 
 case object Wicket extends Ball {

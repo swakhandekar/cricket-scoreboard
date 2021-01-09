@@ -6,7 +6,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class OverTest extends AnyWordSpec with Matchers {
   "validCount" should {
     "return count of balls except wide and no balls" in {
-      val over = Over(1, List(Runs(1), Runs(2), WideBall, NoBall))
+      val over = Over(1, List(Runs(1), Runs(2), WideBall(), NoBall()))
 
       over.validCount shouldBe 2
     }
@@ -14,7 +14,7 @@ class OverTest extends AnyWordSpec with Matchers {
 
   "isFinished" should {
     "return true when valid balls are 6" in {
-      val over = Over(1, List(Runs(1), Runs(2), Runs(6), NoBall, Runs(4), Runs(4), Runs(1)))
+      val over = Over(1, List(Runs(1), Runs(2), Runs(6), NoBall(), Runs(4), Runs(4), Runs(1)))
 
       over.isFinished shouldBe true
     }
