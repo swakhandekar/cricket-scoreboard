@@ -1,6 +1,6 @@
 package cricket.scorecard
 
-import cricket.scorecard.models.{NoBall, Runs, Wicket, WideBall}
+import cricket.scorecard.models.{NoBall, Over, Runs, Wicket, WideBall}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -56,6 +56,17 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
       val ballsInOver = over.balls
       ballsInOver.size shouldBe 1
       ballsInOver.head shouldBe Runs(4)
+    }
+
+    "should return score card with new over when entered ball is valid and last ball of over" in {
+      val scoreCard = ScoreCard(13, Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
+
+      val updatedScoreCard = scoreCard.nextBall(Runs(4))
+
+      val over = updatedScoreCard.over
+      over.number shouldBe 2
+      val ballsInOver = over.balls
+      ballsInOver.size shouldBe 0
     }
   }
 }
