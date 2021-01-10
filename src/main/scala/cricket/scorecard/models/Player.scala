@@ -1,6 +1,6 @@
 package cricket.scorecard.models
 
-case class Player(name: String, stats: Stats = Stats.empty, state: PlayerState = YetToPlay) {
+case class Player(name: String, stats: Stats = Stats.empty, state: PlayerState = NotOut) {
   def plays(runs: Ball): Player = {
     val playerState = if(runs == Wicket) Out else state
 
@@ -9,8 +9,6 @@ case class Player(name: String, stats: Stats = Stats.empty, state: PlayerState =
 }
 
 sealed trait PlayerState
-
-case object YetToPlay extends PlayerState
 
 case object NotOut extends PlayerState
 
