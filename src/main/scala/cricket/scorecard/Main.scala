@@ -1,7 +1,7 @@
 package cricket.scorecard
 
 import cricket.scorecard.Input.{numOvers, team1Players, team2Players}
-import cricket.scorecard.models.{Ball, Player, Runs}
+import cricket.scorecard.models.{Ball, Player}
 import cricket.scorecard.repository.PlayerRepository
 
 import scala.annotation.tailrec

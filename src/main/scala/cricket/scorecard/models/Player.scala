@@ -1,6 +1,10 @@
 package cricket.scorecard.models
 
 case class Player(name: String, stats: Stats = Stats.empty, state: PlayerState = NotOut) {
+  def statsString(): String = {
+    s"Name: $name, ${stats.toString}, $state"
+  }
+
   def plays(runs: Ball): Player = {
     val playerState = if(runs == Wicket) Out else state
 

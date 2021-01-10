@@ -22,4 +22,16 @@ case class Inning(scoreCard: ScoreCard, totalOvers: Int, team: PlayerRepository,
     } else
       copy(scoreCard = updatedScoreCard, endOfInning = isEndOfInning)
   }
+
+  def hasFinishedAnOver: Boolean = scoreCard.over.number > 1 && scoreCard.over.balls.isEmpty
+
+  def printStats(): Unit = {
+    println(s"ScoreCard: ")
+    val players = scoreCard.onStrike :: scoreCard.offStrike :: team.outPlayers
+    val playerStats = players.map(_.statsString()).mkString("\n")
+    println(playerStats)
+    println(s"Score: ${scoreCard.totalScore}/${scoreCard.wickets}")
+    println(s"Overs: ${scoreCard.over.number - 1}.${scoreCard.over.validCount}")
+  }
+
 }

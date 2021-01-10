@@ -21,10 +21,18 @@ case class Match(inning1: Inning, inning2: Inning, isSecondInning: Boolean = fal
       val updatedInning = inning2.nextBall(ball)
       val teamMadeMoreScore = updatedInning.scoreCard.totalScore > inning1.scoreCard.totalScore
 
+      if(updatedInning.hasFinishedAnOver || updatedInning.endOfInning) {
+        updatedInning.printStats()
+      }
+
       if (updatedInning.endOfInning || teamMadeMoreScore) copy(inning2 = updatedInning, hasEnded = true)
       else copy(inning2 = updatedInning)
     } else {
       val updatedInning = inning1.nextBall(ball)
+
+      if(updatedInning.hasFinishedAnOver || updatedInning.endOfInning) {
+        updatedInning.printStats()
+      }
 
       if (updatedInning.endOfInning) copy(inning1 = updatedInning, isSecondInning = true)
       else copy(inning1 = updatedInning)

@@ -11,6 +11,11 @@ case class Stats(singles: Int = 0, boundaries: Int = 0, sixes: Int = 0, ballsFac
     }
   }
 
+  def totalScore: Int = singles + 4 * boundaries + 6 * sixes
+
+  override def toString: String = {
+    s"Total: $totalScore, Singles: $singles, Boundaries: $boundaries, Sixes: $sixes, BallsFaced: $ballsFaced"
+  }
 }
 
 object Stats {
