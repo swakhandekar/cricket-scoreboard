@@ -1,6 +1,7 @@
 package cricket.scorecard
 
-import cricket.scorecard.models.{NoBall, Over, Player, Runs, Wicket, WideBall}
+import cricket.scorecard.models._
+import org.mockito.MockitoSugar.{mock, times, verify, when}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -13,6 +14,17 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
         val updatedScoreCard = scoreCard.nextBall(Runs(1))
 
         updatedScoreCard.totalScore shouldBe 1
+      }
+
+      "update individual player score" in {
+        val ballToPlay = Runs(1)
+        val onStrike = mock[Player]
+        when(onStrike.plays(ballToPlay)).thenReturn(onStrike)
+        val scoreCard = ScoreCard(0, 2, List.empty, onStrike, Player("B"))
+
+        scoreCard.nextBall(ballToPlay)
+
+        verify(onStrike, times(1)).plays(ballToPlay)
       }
     }
 
@@ -85,8 +97,8 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
 
         val updatedScoreCard = scoreCard.nextBall(Runs(1))
 
-        updatedScoreCard.onStrike shouldBe Player("Sehwagh")
-        updatedScoreCard.offStrike shouldBe Player("Sachin")
+        updatedScoreCard.onStrike.name shouldBe "Sehwagh"
+        updatedScoreCard.offStrike.name shouldBe "Sachin"
       }
 
       "score is 3 and no over change" in {
@@ -94,8 +106,8 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
 
         val updatedScoreCard = scoreCard.nextBall(Runs(3))
 
-        updatedScoreCard.onStrike shouldBe Player("Sehwagh")
-        updatedScoreCard.offStrike shouldBe Player("Sachin")
+        updatedScoreCard.onStrike.name shouldBe "Sehwagh"
+        updatedScoreCard.offStrike.name shouldBe "Sachin"
       }
 
       "over changes and score is neither 1 or 3" in {
@@ -103,8 +115,8 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
 
         val updatedScoreCard = scoreCard.nextBall(Runs(4))
 
-        updatedScoreCard.onStrike shouldBe Player("B")
-        updatedScoreCard.offStrike shouldBe Player("A")
+        updatedScoreCard.onStrike.name shouldBe "B"
+        updatedScoreCard.offStrike.name shouldBe "A"
       }
     }
   }

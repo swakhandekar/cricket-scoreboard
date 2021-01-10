@@ -25,10 +25,10 @@ case class ScoreCard(
   }
 
   private def updatedOnFieldPlayers(score: Ball, shouldRotate: Boolean) = {
+    val onStrikePlays = onStrike.plays(score)
     if (score == Wicket && players.nonEmpty) (players.head, offStrike)
-    else if (shouldRotate) (offStrike, onStrike)
-    else (onStrike, offStrike)
-
+    else if (shouldRotate) (offStrike, onStrikePlays)
+    else (onStrikePlays, offStrike)
   }
 
   private def shouldRotateStrike(score: Ball, over: Over): Boolean = score match {
