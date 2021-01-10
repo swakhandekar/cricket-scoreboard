@@ -31,7 +31,7 @@ class InningTest extends AnyWordSpec with Matchers {
       updatedScoreCard.scoreCard.onStrike shouldBe nextPlayer
     }
 
-    "update out players list when a player gets out on non last over balls" in {
+    "update out-players list when a player gets out on non last over balls" in {
       val scoreCard = ScoreCard(12, Player("P"), Player("Q"), Over(1, List(Runs(1), Runs(2))))
       val ball = Wicket
 
@@ -42,7 +42,7 @@ class InningTest extends AnyWordSpec with Matchers {
       updatedInning.team.outPlayers.head shouldBe Player("P", Stats(ballsFaced = 1), Out)
     }
 
-    "update out players list when a player gets out on last ball of over" in {
+    "update out-players list when a player gets out on last ball of over" in {
       val mockScoreCard = ScoreCard(12, Player("P"), Player("Q"),
         Over(1, List(Runs(1), Runs(2), Runs(2), Runs(1), Runs(3))))
       val ball = Wicket
@@ -52,6 +52,15 @@ class InningTest extends AnyWordSpec with Matchers {
       val updatedInning = inning.nextBall(ball)
       updatedInning.team.outPlayers.size shouldBe 1
       updatedInning.team.outPlayers.head shouldBe Player("P", Stats(ballsFaced = 1), Out)
+    }
+
+    "mark end of inning when last wicket falls" in {
+      val team = PlayerRepository(2, List.empty)
+      val inning = Inning(scoreCard = mock[ScoreCard], team)
+
+      val updatedInning = inning.nextBall(Wicket)
+
+      updatedInning.endOfInning shouldBe true
     }
   }
 }

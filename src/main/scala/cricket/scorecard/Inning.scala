@@ -20,5 +20,4 @@ case class Inning(scoreCard: ScoreCard, team: PlayerRepository, endOfInning: Boo
     } else
       copy(scoreCard = updatedScoreCard)
   }
-
 }
