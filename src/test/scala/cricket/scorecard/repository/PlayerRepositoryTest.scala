@@ -7,7 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class PlayerRepositoryTest extends AnyWordSpec with Matchers {
   "wicketOf" should {
     "return repository with out player added in out players list" in {
-      val repository = PlayerRepository(3, List.empty, List(Player("C")))
+      val repository = PlayerRepository(3, List(Player("C")), List.empty)
 
       val updatedRepository = repository.wicketOf(Player("A"))
 
@@ -18,7 +18,7 @@ class PlayerRepositoryTest extends AnyWordSpec with Matchers {
 
   "isEmpty" should {
     "return true when there are players remaining" in {
-      val repository = PlayerRepository(2, List.empty, List(Player("A")))
+      val repository = PlayerRepository(2, List(Player("A")), List.empty)
 
       repository.nonEmpty shouldBe true
     }
@@ -26,7 +26,7 @@ class PlayerRepositoryTest extends AnyWordSpec with Matchers {
 
   "next" should {
     "return next player from next players list" in {
-      val repository = PlayerRepository(3, List.empty, List(Player("A")))
+      val repository = PlayerRepository(3, List(Player("A")), List.empty)
 
       repository.next shouldBe Player("A")
     }
@@ -34,7 +34,7 @@ class PlayerRepositoryTest extends AnyWordSpec with Matchers {
 
   "pop" should {
     "return repository with removed next player from next player list" in {
-      val repository = PlayerRepository(3, List.empty, List(Player("A")))
+      val repository = PlayerRepository(3, List(Player("A")), List.empty)
 
       repository.pop().remainingPlayers shouldBe List.empty
     }
