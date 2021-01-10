@@ -4,10 +4,12 @@ import cricket.scorecard.models.Ball
 
 case class Match(inning1: Inning, inning2: Inning, isSecondInning: Boolean = false, hasEnded: Boolean = false) {
   def result(): String = {
-    if (inning1.scoreCard.totalScore > inning2.scoreCard.totalScore) {
-      "Team 1"
-    } else if (inning1.scoreCard.totalScore < inning2.scoreCard.totalScore) {
-      "Team 2"
+    val team1Score = inning1.scoreCard.totalScore
+    val team2Score = inning2.scoreCard.totalScore
+    if (team1Score > team2Score) {
+      s"Team 1 won by ${team1Score - team2Score} run(s)"
+    } else if (team1Score < team2Score) {
+      s"Team 2 won by ${team2Score - team1Score} run(s)"
     } else {
       "Tie"
     }

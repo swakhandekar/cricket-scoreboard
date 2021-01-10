@@ -106,7 +106,7 @@ class MatchTest extends AnyWordSpec with Matchers {
 
       val cricketMatch = Match(mockInning1, mockInning2, isSecondInning = true)
 
-      cricketMatch.result() shouldBe "Team 2"
+      cricketMatch.result() shouldBe "Team 2 won by 2 run(s)"
     }
 
     "return Team2 if team1 score is less than team 2 score" in {
@@ -120,7 +120,7 @@ class MatchTest extends AnyWordSpec with Matchers {
 
       val cricketMatch = Match(mockInning1, mockInning2, isSecondInning = true)
 
-      cricketMatch.result() shouldBe "Team 1"
+      cricketMatch.result() shouldBe "Team 1 won by 2 run(s)"
     }
 
     "return Tie in case of same score of both the teams" in {
