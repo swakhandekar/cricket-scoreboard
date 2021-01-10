@@ -1,10 +1,11 @@
 package cricket.scorecard
 
 import cricket.scorecard.models.{Ball, Over, Player, Runs, Wicket}
+import cricket.scorecard.repository.PlayerRepository
 
 case class ScoreCard(
                       totalScore: Int,
-                      numPlayers: Int, players: List[Player],
+                      playerRepository: PlayerRepository,
                       onStrike: Player, offStrike: Player,
                       over: Over = Over.empty(1), wickets: Int = 0) {
 
@@ -20,13 +21,17 @@ case class ScoreCard(
       wickets = if(score == Wicket) wickets + 1 else wickets,
       onStrike = updatedOnStrike,
       offStrike = updatedOffStrike,
-      players = if(score == Wicket && players.nonEmpty) players.tail else players
+      playerRepository = updatePlayerRepository(score)
     )
+  }
+
+  private def updatePlayerRepository(score: Ball) = {
+    if (score == Wicket && playerRepository.nonEmpty) playerRepository.wicketOf(onStrike).pop() else playerRepository
   }
 
   private def updatedOnFieldPlayers(score: Ball, shouldRotate: Boolean) = {
     val onStrikePlays = onStrike.plays(score)
-    if (score == Wicket && players.nonEmpty) (players.head, offStrike)
+    if (score == Wicket && playerRepository.nonEmpty) (playerRepository.next, offStrike)
     else if (shouldRotate) (offStrike, onStrikePlays)
     else (onStrikePlays, offStrike)
   }

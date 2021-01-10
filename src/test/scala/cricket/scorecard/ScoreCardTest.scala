@@ -1,6 +1,7 @@
 package cricket.scorecard
 
 import cricket.scorecard.models._
+import cricket.scorecard.repository.PlayerRepository
 import org.mockito.MockitoSugar.{mock, times, verify, when}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -20,7 +21,7 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
         val ballToPlay = Runs(1)
         val onStrike = mock[Player]
         when(onStrike.plays(ballToPlay)).thenReturn(onStrike)
-        val scoreCard = ScoreCard(0, 2, List.empty, onStrike, Player("B"))
+        val scoreCard = ScoreCard(0, createPlayerRepository(), onStrike, Player("B"))
 
         scoreCard.nextBall(ballToPlay)
 
@@ -58,13 +59,24 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
       }
 
       "return score card with next player on strike" in {
-        val scoreCard = ScoreCard(13, 2, List(Player("C"), Player("D")), Player("A"), Player("B"), Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
+        val remainingPlayers = List(Player("C"), Player("D"))
+        val scoreCard = ScoreCard(13, createPlayerRepository(remainingPlayers), Player("A"), Player("B"),Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
 
         val updatedScoreCard = scoreCard.nextBall(Wicket)
 
-        updatedScoreCard.players.length shouldBe 1
-        updatedScoreCard.players.head.name shouldBe "D"
+        updatedScoreCard.playerRepository.remainingPlayers.length shouldBe 1
+        updatedScoreCard.playerRepository.next.name shouldBe "D"
         updatedScoreCard.onStrike.name shouldBe "C"
+      }
+
+      "return score card with score card containing out player" in {
+        val remainingPlayers = List(Player("C"), Player("D"))
+        val scoreCard = ScoreCard(13, createPlayerRepository(remainingPlayers), Player("A"), Player("B"),Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
+
+        val updatedScoreCard = scoreCard.nextBall(Wicket)
+
+        updatedScoreCard.playerRepository.outPlayers.size shouldBe 1
+        updatedScoreCard.playerRepository.outPlayers.head.name shouldBe "A"
       }
     }
 
@@ -81,7 +93,7 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
     }
 
     "should return score card with new over when entered ball is valid and last ball of over" in {
-      val scoreCard = ScoreCard(13, 2, List.empty, Player("a"), Player("B"), Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
+      val scoreCard = ScoreCard(13, createPlayerRepository(), Player("a"), Player("B"), Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
 
       val updatedScoreCard = scoreCard.nextBall(Runs(4))
 
@@ -111,7 +123,7 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
       }
 
       "over changes and score is neither 1 or 3" in {
-        val scoreCard = ScoreCard(13, 2, List.empty, Player("A"), Player("B"), Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
+        val scoreCard = ScoreCard(13, createPlayerRepository(), Player("A"), Player("B"), Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(3))))
 
         val updatedScoreCard = scoreCard.nextBall(Runs(4))
 
@@ -119,6 +131,10 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
         updatedScoreCard.offStrike.name shouldBe "A"
       }
     }
+  }
+
+  private def createPlayerRepository(remainingPlayers: List[Player] = List.empty) = {
+    PlayerRepository(2, List.empty, remainingPlayers)
   }
 
   "wickets" should {
@@ -132,6 +148,6 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
   }
 
   private def makeTestScoreCard(withInitialScore: Int = 0) = {
-    ScoreCard(withInitialScore, 11, List.empty, Player("Sachin"), Player("Sehwagh"))
+    ScoreCard(withInitialScore, createPlayerRepository(), Player("Sachin"), Player("Sehwagh"))
   }
 }
