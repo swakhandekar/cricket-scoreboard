@@ -13,7 +13,8 @@ class InningTest extends AnyWordSpec with Matchers {
       val mockScoreCard = mock[ScoreCard]
       val ball = Runs(1)
       when(mockScoreCard.updateScoreCard(ball)).thenReturn(mockScoreCard)
-      val matchScoreBoard = Inning(mockScoreCard, teamRepository)
+      when(mockScoreCard.over).thenReturn(Over(1, List.empty))
+      val matchScoreBoard = Inning(mockScoreCard, 1, teamRepository)
 
       matchScoreBoard.nextBall(ball)
 
@@ -24,7 +25,7 @@ class InningTest extends AnyWordSpec with Matchers {
       val scoreCard = ScoreCard(12, Player("P"), Player("Q"), Over(1, List(Runs(1), Runs(2))))
       val ball = Wicket
       val nextPlayer = teamRepository.next
-      val matchScoreBoard = Inning(scoreCard, teamRepository)
+      val matchScoreBoard = Inning(scoreCard, 1, teamRepository)
 
       val updatedScoreCard = matchScoreBoard.nextBall(ball)
 
@@ -35,7 +36,7 @@ class InningTest extends AnyWordSpec with Matchers {
       val scoreCard = ScoreCard(12, Player("P"), Player("Q"), Over(1, List(Runs(1), Runs(2))))
       val ball = Wicket
 
-      val inning = Inning(scoreCard, teamRepository)
+      val inning = Inning(scoreCard, 1, teamRepository)
 
       val updatedInning = inning.nextBall(ball)
       updatedInning.team.outPlayers.size shouldBe 1
@@ -47,7 +48,7 @@ class InningTest extends AnyWordSpec with Matchers {
         Over(1, List(Runs(1), Runs(2), Runs(2), Runs(1), Runs(3))))
       val ball = Wicket
 
-      val inning = Inning(mockScoreCard, teamRepository)
+      val inning = Inning(mockScoreCard, 1, teamRepository)
 
       val updatedInning = inning.nextBall(ball)
       updatedInning.team.outPlayers.size shouldBe 1
@@ -56,9 +57,23 @@ class InningTest extends AnyWordSpec with Matchers {
 
     "mark end of inning when last wicket falls" in {
       val team = PlayerRepository(2, List.empty)
-      val inning = Inning(scoreCard = mock[ScoreCard], team)
+      val mockCard = mock[ScoreCard]
+      when(mockCard.updateScoreCard(Wicket)).thenReturn(mockCard)
+      when(mockCard.over).thenReturn(Over(1, List.empty))
+      val inning = Inning(scoreCard = mockCard, 1, team)
 
       val updatedInning = inning.nextBall(Wicket)
+
+      updatedInning.endOfInning shouldBe true
+    }
+
+    "mark end of innings when all overs are played" in {
+      val team = PlayerRepository(2, List.empty)
+      val over = Over(1, List(Runs(1), Runs(2), Runs(3), Runs(4), Runs(1)))
+      val scoreCard = ScoreCard(10, Player("A"), Player("B"), over)
+      val inning = Inning(scoreCard, 1, team)
+
+      val updatedInning = inning.nextBall(Runs(1))
 
       updatedInning.endOfInning shouldBe true
     }
