@@ -93,4 +93,48 @@ class MatchTest extends AnyWordSpec with Matchers {
       }
     }
   }
+
+  "result" should {
+    "return Team1 if team2 score is less than team 1 score" in {
+      val mockInning1 = mock[Inning]
+      val mockInning2 = mock[Inning]
+      val scoreCard1 = ScoreCard(8, mock[Player], mock[Player])
+      val scoreCard2 = ScoreCard(10, mock[Player], mock[Player])
+
+      when(mockInning1.scoreCard).thenReturn(scoreCard1)
+      when(mockInning2.scoreCard).thenReturn(scoreCard2)
+
+      val cricketMatch = Match(mockInning1, mockInning2, isSecondInning = true)
+
+      cricketMatch.result() shouldBe "Team 2"
+    }
+
+    "return Team2 if team1 score is less than team 2 score" in {
+      val mockInning1 = mock[Inning]
+      val mockInning2 = mock[Inning]
+      val scoreCard1 = ScoreCard(10, mock[Player], mock[Player])
+      val scoreCard2 = ScoreCard(8, mock[Player], mock[Player])
+
+      when(mockInning1.scoreCard).thenReturn(scoreCard1)
+      when(mockInning2.scoreCard).thenReturn(scoreCard2)
+
+      val cricketMatch = Match(mockInning1, mockInning2, isSecondInning = true)
+
+      cricketMatch.result() shouldBe "Team 1"
+    }
+
+    "return Tie in case of same score of both the teams" in {
+      val mockInning1 = mock[Inning]
+      val mockInning2 = mock[Inning]
+      val scoreCard1 = ScoreCard(8, mock[Player], mock[Player])
+      val scoreCard2 = ScoreCard(8, mock[Player], mock[Player])
+
+      when(mockInning1.scoreCard).thenReturn(scoreCard1)
+      when(mockInning2.scoreCard).thenReturn(scoreCard2)
+
+      val cricketMatch = Match(mockInning1, mockInning2, isSecondInning = true)
+
+      cricketMatch.result() shouldBe "Tie"
+    }
+  }
 }
