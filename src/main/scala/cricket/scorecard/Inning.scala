@@ -43,7 +43,10 @@ case class Inning(scoreCard: ScoreCard, totalOvers: Int, team: PlayerRepository,
     println(s"ScoreCard: ")
     val players = scoreCard.onStrike :: scoreCard.offStrike :: team.outPlayers
     val playerStats = players.map(_.statsString()).mkString("\n")
+    println("Batting stats:")
     println(playerStats)
+
+    println("Bowling stats:")
     bowlersRepo.printStats()
     println(s"Score: ${scoreCard.totalScore}/${scoreCard.wickets}, Extras: ${scoreCard.extras}")
     println(s"Overs: ${scoreCard.over.number - 1}.${scoreCard.over.validCount}")
