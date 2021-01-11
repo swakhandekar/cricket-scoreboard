@@ -14,7 +14,6 @@ class BowlerTest extends AnyWordSpec with Matchers {
       val bowler = Bowler("A", stats = mockStats)
 
       val updatedBowler = bowler.balls(ball)
-      updatedBowler.stats shouldBe BowlingStats()
 
       verify(mockStats.update(ball), times(1))
       updatedBowler.stats shouldBe returnedStats
