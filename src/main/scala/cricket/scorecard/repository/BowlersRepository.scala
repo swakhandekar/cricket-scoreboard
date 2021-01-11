@@ -3,7 +3,7 @@ package cricket.scorecard.repository
 import cricket.scorecard.models.{Ball, Bowler}
 
 case class BowlersRepository(nextBowler: Bowler, remainingBowlers: List[Bowler], done: List[Bowler] = List.empty) {
-  def printStats() = {
+  def printStats(): Unit = {
     val allBowlers: List[Bowler] = nextBowler :: remainingBowlers ++ done
 
     allBowlers.foreach(b => b.printStats())
@@ -30,5 +30,10 @@ case class BowlersRepository(nextBowler: Bowler, remainingBowlers: List[Bowler],
       )
     }
   }
+}
 
+object BowlersRepository {
+  def createFrom(list: List[Bowler]): BowlersRepository = {
+    BowlersRepository(list.head, list.tail, List.empty)
+  }
 }
