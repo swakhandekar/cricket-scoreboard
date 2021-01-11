@@ -10,7 +10,7 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
   "updateScoreCard" when {
     "is a valid score" should {
       "return score-card with updated overall score" in {
-        val scoreCard = makeTestScoreCard()
+        val scoreCard = ScoreCard(0, Player("Sachin"), Player("Sehwagh"))
 
         val updatedScoreCard = scoreCard.updateScoreCard(Runs(1))
 
@@ -31,27 +31,43 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
 
     "is a wide ball" should {
       "return score card with score updated additionally by one" in {
-        val scoreCard = makeTestScoreCard(2)
+        val scoreCard = ScoreCard(2, Player("Sachin"), Player("Sehwagh"))
 
         val updatedScoreCard = scoreCard.updateScoreCard(WideBall(4))
 
         updatedScoreCard.totalScore shouldBe 7
       }
+
+      "return score card with updated extra score" in {
+        val scoreCard = ScoreCard(2, Player("Sachin"), Player("Sehwagh"), extras = 2)
+
+        val updatedScoreCard = scoreCard.updateScoreCard(WideBall(4))
+
+        updatedScoreCard.extras shouldBe 3
+      }
     }
 
     "is a no ball" should {
       "return score card with score updated by one" in {
-        val scoreCard = makeTestScoreCard(12)
+        val scoreCard = ScoreCard(12, Player("Sachin"), Player("Sehwagh"))
 
         val updatedScoreCard = scoreCard.updateScoreCard(NoBall(6))
 
         updatedScoreCard.totalScore shouldBe 19
       }
+
+      "return score card with updated extra score" in {
+        val scoreCard = ScoreCard(12, Player("Sachin"), Player("Sehwagh"), extras = 3)
+
+        val updatedScoreCard = scoreCard.updateScoreCard(NoBall(6))
+
+        updatedScoreCard.extras shouldBe 4
+      }
     }
 
     "is a wicket" should {
       "return score card with same score" in {
-        val scoreCard = makeTestScoreCard(12)
+        val scoreCard = ScoreCard(12, Player("Sachin"), Player("Sehwagh"))
 
         val updatedScoreCard = scoreCard.updateScoreCard(Wicket)
 
@@ -60,7 +76,7 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
     }
 
     "should return score-card with addition in bowled balls in an over" in {
-      val scoreCard = makeTestScoreCard(12)
+      val scoreCard = ScoreCard(12, Player("Sachin"), Player("Sehwagh"))
 
       val updatedScoreCard = scoreCard.updateScoreCard(Runs(4))
 
@@ -84,7 +100,7 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
 
     "change the player on strike" when {
       "score is 1 and no over change" in {
-        val scoreCard = makeTestScoreCard()
+        val scoreCard = ScoreCard(0, Player("Sachin"), Player("Sehwagh"))
 
         val updatedScoreCard = scoreCard.updateScoreCard(Runs(1))
 
@@ -93,7 +109,7 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
       }
 
       "score is 3 and no over change" in {
-        val scoreCard = makeTestScoreCard()
+        val scoreCard = ScoreCard(0, Player("Sachin"), Player("Sehwagh"))
 
         val updatedScoreCard = scoreCard.updateScoreCard(Runs(3))
 
@@ -140,15 +156,11 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
 
   "wickets" should {
     "return number of wickets" in {
-      val scoreCard = makeTestScoreCard()
+      val scoreCard = ScoreCard(0, Player("Sachin"), Player("Sehwagh"))
 
       val updatedCard = scoreCard.updateScoreCard(Runs(1)).updateScoreCard(Wicket).updateScoreCard(Runs(2)).updateScoreCard(Wicket)
 
       updatedCard.wickets shouldBe 2
     }
-  }
-
-  private def makeTestScoreCard(withInitialScore: Int = 0) = {
-    ScoreCard(withInitialScore, Player("Sachin"), Player("Sehwagh"))
   }
 }
