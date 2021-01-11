@@ -26,10 +26,10 @@ object Main {
     playMatch(cricketMatch, balls)
   }
 
-  private def createInning(batsmen: List[Player], inputBowlers: List[Bowler]): Inning = {
+  private def createInning(batsmen: List[Player], bowlers: List[Bowler]): Inning = {
     val team1 = PlayerRepository(batsmen.length, batsmen.tail.tail)
-    val bowlers = BowlersRepository(inputBowlers.head, inputBowlers.tail, List.empty)
-    Inning(ScoreCard(0, batsmen.head, batsmen.tail.head), numOvers, team1, bowlers)
+    val bowlersRepository = BowlersRepository.createFrom(bowlers)
+    Inning(ScoreCard(0, batsmen.head, batsmen.tail.head), numOvers, team1, bowlersRepository)
   }
 
   private def readFromInput() = {
