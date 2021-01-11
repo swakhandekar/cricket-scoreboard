@@ -17,7 +17,7 @@ case class Inning(scoreCard: ScoreCard, totalOvers: Int, team: PlayerRepository,
 
         copy(scoreCard = updatedScoreCard.updatePlayer(nextPlayer), team = updatedTeam.pop(), endOfInning = isEndOfInning)
       } else {
-        copy(endOfInning = true)
+        copy(scoreCard = updatedScoreCard, endOfInning = true)
       }
     } else
       copy(scoreCard = updatedScoreCard, endOfInning = isEndOfInning)
