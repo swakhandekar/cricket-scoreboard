@@ -6,8 +6,10 @@ case class ScoreCard(
                       totalScore: Int,
                       onStrike: Player, offStrike: Player,
                       over: Over = Over.empty(1), wickets: Int = 0) {
-  def updatePlayer(nextPlayer: Player): ScoreCard = {
-    copy(onStrike = nextPlayer)
+  def updateOutPlayer(nextPlayer: Player): ScoreCard = {
+    if (onStrike.state == Out)
+      copy(onStrike = nextPlayer)
+    else copy(offStrike = nextPlayer)
   }
 
   def updateScoreCard(score: Ball): ScoreCard = {
@@ -17,15 +19,15 @@ case class ScoreCard(
 
     copy(
       totalScore = totalScore + score.runs,
-      over = if(updatedOver.isFinished) Over.empty(over.number + 1) else updatedOver,
-      wickets = if(score == Wicket) wickets + 1 else wickets,
-      onStrike = if(shouldRotate) offStrike else updatedOnStrike,
-      offStrike = if(shouldRotate) updatedOnStrike else offStrike
+      over = if (updatedOver.isFinished) Over.empty(over.number + 1) else updatedOver,
+      wickets = if (score == Wicket) wickets + 1 else wickets,
+      onStrike = if (shouldRotate) offStrike else updatedOnStrike,
+      offStrike = if (shouldRotate) updatedOnStrike else offStrike
     )
   }
 
   private def shouldRotateStrike(score: Ball, over: Over): Boolean = score.valid match {
-    case 1 | 3 => if(!over.isFinished) true else false
+    case 1 | 3 => if (!over.isFinished) true else false
     case _ => over.isFinished
   }
 }

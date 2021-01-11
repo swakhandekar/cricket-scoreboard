@@ -15,7 +15,7 @@ case class Inning(scoreCard: ScoreCard, totalOvers: Int, team: PlayerRepository,
         val outPlayer = if (updatedScoreCard.onStrike.state == Out) updatedScoreCard.onStrike else updatedScoreCard.offStrike
         val updatedTeam = team.wicketOf(outPlayer)
 
-        copy(scoreCard = updatedScoreCard.updatePlayer(nextPlayer), team = updatedTeam.pop(), endOfInning = isEndOfInning)
+        copy(scoreCard = updatedScoreCard.updateOutPlayer(nextPlayer), team = updatedTeam.pop(), endOfInning = isEndOfInning)
       } else {
         copy(scoreCard = updatedScoreCard, endOfInning = true)
       }

@@ -113,14 +113,28 @@ class ScoreCardTest extends AnyWordSpec with Matchers {
     }
   }
 
-  "updatePlayer" should {
-    "update the player on strike with provided player" in {
-      val scoreCard = makeTestScoreCard()
-      val nextPlayer = Player("C")
+  "updateOutPlayer" when {
+    "when out player is on strike" should {
+      "update the out player with provided player" in {
+        val scoreCard = ScoreCard(0, Player("Sachin", state = Out), Player("Sehwagh"))
+        val nextPlayer = Player("C")
 
-      val updatedCard = scoreCard.updatePlayer(nextPlayer)
+        val updatedCard = scoreCard.updateOutPlayer(nextPlayer)
 
-      updatedCard.onStrike shouldBe Player("C")
+        updatedCard.onStrike shouldBe Player("C")
+      }
+    }
+
+    "when out player is off strike" should {
+      "update the out player with provided player" in {
+        val scoreCard = ScoreCard(0, Player("Sehwagh"), Player("Sachin", state = Out))
+        val nextPlayer = Player("C")
+
+        val updatedCard = scoreCard.updateOutPlayer(nextPlayer)
+
+        updatedCard.offStrike shouldBe Player("C")
+        updatedCard.onStrike shouldBe Player("Sehwagh")
+      }
     }
   }
 
