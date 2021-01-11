@@ -1,14 +1,14 @@
 package cricket.scorecard
 
-import cricket.scorecard.models.{Ball, Player}
-import cricket.scorecard.repository.PlayerRepository
+import cricket.scorecard.models.{Ball, Bowler, Player}
+import cricket.scorecard.repository.{BowlersRepository, PlayerRepository}
 
 import scala.annotation.tailrec
 
 object Main {
   val (team1Players, team2Players, balls, numOvers) = readFromInput()
-  private val inning1 = createInning(team1Players)
-  private val inning2 = createInning(team2Players)
+  private val inning1 = createInning(team1Players.map(Player(_)), team2Players.map(Bowler(_)))
+  private val inning2 = createInning(team2Players.map(Player(_)), team1Players.map(Bowler(_)))
 
   private val cricketMatch = Match(inning1, inning2)
 
@@ -26,9 +26,10 @@ object Main {
     playMatch(cricketMatch, balls)
   }
 
-  private def createInning(players: List[Player]): Inning = {
-    val team1 = PlayerRepository(players.length, players.tail.tail)
-    Inning(ScoreCard(0, players.head, players.tail.head), numOvers, team1)
+  private def createInning(batsmen: List[Player], inputBowlers: List[Bowler]): Inning = {
+    val team1 = PlayerRepository(batsmen.length, batsmen.tail.tail)
+    val bowlers = BowlersRepository(inputBowlers.head, inputBowlers.tail, List.empty)
+    Inning(ScoreCard(0, batsmen.head, batsmen.tail.head), numOvers, team1, bowlers)
   }
 
   private def readFromInput() = {
