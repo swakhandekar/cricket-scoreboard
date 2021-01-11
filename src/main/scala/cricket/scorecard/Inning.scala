@@ -30,7 +30,7 @@ case class Inning(scoreCard: ScoreCard, totalOvers: Int, team: PlayerRepository,
     val players = scoreCard.onStrike :: scoreCard.offStrike :: team.outPlayers
     val playerStats = players.map(_.statsString()).mkString("\n")
     println(playerStats)
-    println(s"Score: ${scoreCard.totalScore}/${scoreCard.wickets}")
+    println(s"Score: ${scoreCard.totalScore}/${scoreCard.wickets}, Extras: ${scoreCard.extras}")
     println(s"Overs: ${scoreCard.over.number - 1}.${scoreCard.over.validCount}")
   }
 
