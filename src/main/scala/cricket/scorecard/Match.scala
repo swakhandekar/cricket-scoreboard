@@ -21,7 +21,7 @@ case class Match(inning1: Inning, inning2: Inning, isSecondInning: Boolean = fal
       val updatedInning = inning2.nextBall(ball)
       val teamMadeMoreScore = updatedInning.scoreCard.totalScore > inning1.scoreCard.totalScore
 
-      if(updatedInning.hasFinishedAnOver || updatedInning.endOfInning) {
+      if(updatedInning.hasFinishedAnOver || updatedInning.endOfInning || teamMadeMoreScore) {
         updatedInning.printStats()
       }
 
