@@ -13,9 +13,8 @@ case class Inning(scoreCard: ScoreCard, totalOvers: Int, team: PlayerRepository,
 
   def nextBall(ball: Ball): Inning = {
     val updatedScoreCard = scoreCard.updateScoreCard(ball)
-    val bowledBall = bowlersRepo.bowls(ball)
-
-    val updatedBowlersRepo = updateRepo(bowledBall)
+    val repoWithUpdatedBowler = updateRepo(bowlersRepo)
+    val repoWithBowledBall = repoWithUpdatedBowler.bowls(ball)
 
     val isEndOfInning = updatedScoreCard.over.number > totalOvers
 
@@ -29,13 +28,13 @@ case class Inning(scoreCard: ScoreCard, totalOvers: Int, team: PlayerRepository,
           scoreCard = updatedScoreCard.updateOutPlayer(nextPlayer),
           team = updatedTeam.pop(),
           endOfInning = isEndOfInning,
-          bowlersRepo = updatedBowlersRepo
+          bowlersRepo = repoWithBowledBall
         )
       } else {
-        copy(scoreCard = updatedScoreCard, endOfInning = true, bowlersRepo = updatedBowlersRepo)
+        copy(scoreCard = updatedScoreCard, endOfInning = true, bowlersRepo = repoWithBowledBall)
       }
     } else
-      copy(scoreCard = updatedScoreCard, endOfInning = isEndOfInning, bowlersRepo = updatedBowlersRepo)
+      copy(scoreCard = updatedScoreCard, endOfInning = isEndOfInning, bowlersRepo = repoWithBowledBall)
   }
 
   def hasFinishedAnOver: Boolean = scoreCard.over.number > 1 && scoreCard.over.balls.isEmpty
