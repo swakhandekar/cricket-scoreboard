@@ -4,7 +4,7 @@ import cricket.scorecard.models.{Ball, Bowler}
 
 case class BowlersRepository(nextBowler: Bowler, remainingBowlers: List[Bowler], done: List[Bowler] = List.empty) {
   def printStats(): Unit = {
-    val allBowlers: List[Bowler] = nextBowler :: remainingBowlers ++ done
+    val allBowlers: List[Bowler] = done.reverse ++ (nextBowler :: remainingBowlers)
 
     allBowlers.foreach(b => b.printStats())
   }
